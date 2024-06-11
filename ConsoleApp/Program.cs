@@ -1,4 +1,6 @@
-﻿using AccesoDatos.Operaciones;
+﻿using AccesoDatos.Models;
+using AccesoDatos.Operaciones;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Identity.Client;
 using Microsoft.VisualBasic;
 using System.Threading.Channels;
@@ -22,7 +24,7 @@ namespace ConsoleApp
             do
             {
                 ShowMenu();
-                Console.WriteLine("Elija una opción:");
+                Console.WriteLine("\nElija una opción:");
                 op = int.Parse(Console.ReadLine());
 
                 // Opciones
@@ -34,6 +36,19 @@ namespace ConsoleApp
                     case 2:
                         ShowOne(alumnoDAO);
                         break;
+                    case 3:
+                        Add(alumnoDAO);
+                        break;
+                    case 4:
+                        Edit(alumnoDAO);
+                        break;
+                    case 5:
+                        Delete(alumnoDAO);
+                        break;
+                    case 6:
+                        again = false;
+                        break;
+
                 }
             } while (again);
         }
@@ -41,12 +56,12 @@ namespace ConsoleApp
         public static void ShowMenu()
         {
             System.Console.WriteLine("\n---------MENU---------");
-            System.Console.WriteLine("1.-   Mostrar alumnos");
-            System.Console.WriteLine("2.-   Mostrar detalle alumno");
-            System.Console.WriteLine("2.-   Agregar");
-            System.Console.WriteLine("3.-   Editar");
-            System.Console.WriteLine("4.-   Eliminar");
-            System.Console.WriteLine("5.-   Salir");
+            System.Console.WriteLine("1.-   Mostrar alumnos.");
+            System.Console.WriteLine("2.-   Mostrar ficha tecnica.");
+            System.Console.WriteLine("3.-   Agregar alumno.");
+            System.Console.WriteLine("4.-   Editar alumno.");
+            System.Console.WriteLine("5.-   Eliminar alumno.");
+            System.Console.WriteLine("6.-   Salir");
         }
 
         #region OPCIONES MENU
@@ -99,6 +114,97 @@ namespace ConsoleApp
 
             Console.WriteLine("Ficha de Alumno: ");
             Console.WriteLine($"ID: {alumno.Id} \nNombre: {alumno.Nombre} \nDNI: {alumno.Dni} \nDireccion: {alumno.Direccion} \nEdad: {alumno.Edad} \nEmail: {alumno.Email}");
+        }
+
+        public static void Add(AlumnoDAO alumnoDAO)
+        {
+            // Limpiar la consola
+            Console.Clear();
+
+            // Mensaje
+            Console.WriteLine("\nIngrese los datos del alumno:");
+
+            // Ingreso de datos
+            Console.WriteLine("Nombre:");
+            string nombre = Console.ReadLine();
+
+            Console.WriteLine("DNI:");
+            string dni = Console.ReadLine();
+
+            Console.WriteLine("Direccion:");
+            string direccion = Console.ReadLine();
+
+            Console.WriteLine("Edad:");
+            int edad = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Email:");
+            string email = Console.ReadLine();
+
+            // Crear objeto
+            Alumno alumno = new Alumno()
+            {
+                Nombre = nombre,
+                Dni = dni,
+                Direccion = direccion,
+                Edad = edad,
+                Email = email
+            };
+
+            // Guardar en base de datos
+            bool result = alumnoDAO.Add(alumno);
+
+            if (result)
+            {
+                // Mensaje
+                Console.WriteLine("Alumno agregado correctamente.");
+            }
+        }
+
+        public static void Edit(AlumnoDAO alumnoDAO)
+        {
+            // Limpiar la consola
+            Console.Clear();
+
+            // Mostrar la lista de alumnos
+            Show(alumnoDAO);
+
+            // Recibimos el id del alumno
+            Console.WriteLine("\nElija un alumno a editar:");
+
+            int id = int.Parse(Console.ReadLine());
+
+            bool response = alumnoDAO.Edit(id);
+
+            if (response)
+            {
+                Console.WriteLine("Alumno actualizado");
+            }
+            else
+            {
+                Console.WriteLine("El alumno no existe");
+            }
+        }
+
+        public static void Delete(AlumnoDAO alumnoDAO)
+        {
+            Console.Clear();
+
+            Show(alumnoDAO);
+
+            Console.WriteLine("\nElija un alumno a eliminar");
+
+            int id = int.Parse(Console.ReadLine());
+
+            bool response = alumnoDAO.Delete(id);
+
+            if (response)
+            {
+                Console.WriteLine("Alumno eliminado");
+            }
+            else
+            {
+                Console.WriteLine("El alumno no existe");
+            }
         }
         #endregion
     }
