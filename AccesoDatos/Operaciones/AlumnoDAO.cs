@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -112,6 +113,24 @@ namespace AccesoDatos.Operaciones
             {
                 Console.WriteLine(ex.Message);
                 return false;
+            }
+        }
+
+        public List<AlumnoAsignatura> AlumnosAsignaturas()
+        {
+            using (ProyectoContext contexto = new ProyectoContext())
+            {
+                var query = from a      in contexto.Alumnos
+                            join m      in contexto.Matriculas  on a.Id             equals m.AlumnoId
+                            join asig   in contexto.Asignaturas on m.AsignaturaId   equals asig.Id
+                            select new AlumnoAsignatura
+                            {
+                                NombreAlumno = a.Nombre,
+                                NombreAsignatura = asig.Nombre,
+                            };
+
+                // Convertimos la consulta LINQ a la lista
+                return query.ToList();
             }
         }
     }

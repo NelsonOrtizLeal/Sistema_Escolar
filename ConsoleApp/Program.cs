@@ -46,6 +46,9 @@ namespace ConsoleApp
                         Delete(alumnoDAO);
                         break;
                     case 6:
+                        AlumnosAsignaturas(alumnoDAO);
+                        break;
+                    case 7:
                         again = false;
                         break;
 
@@ -61,7 +64,8 @@ namespace ConsoleApp
             System.Console.WriteLine("3.-   Agregar alumno.");
             System.Console.WriteLine("4.-   Editar alumno.");
             System.Console.WriteLine("5.-   Eliminar alumno.");
-            System.Console.WriteLine("6.-   Salir");
+            System.Console.WriteLine("6.-   Listar Alumnos -> Asignatura.");
+            System.Console.WriteLine("7.-   Salir");
         }
 
         #region OPCIONES MENU
@@ -205,6 +209,21 @@ namespace ConsoleApp
             {
                 Console.WriteLine("El alumno no existe");
             }
+        }
+
+        public static void AlumnosAsignaturas(AlumnoDAO alumnoDAO)
+        {
+            Console.Clear();
+
+            Console.WriteLine("Alumno".PadRight(25) + "Asignatura");
+            Console.WriteLine("-------------------------------------");
+
+            var alumnosAsignaturas = alumnoDAO.AlumnosAsignaturas();
+
+            if (alumnosAsignaturas.Count == 0)
+                Console.WriteLine("Sin alumnos que mostrar.");
+
+            Console.WriteLine(string.Join(Environment.NewLine, alumnosAsignaturas.Select(alumno => $"{alumno.NombreAlumno.PadRight(25)} {alumno.NombreAsignatura}")));
         }
         #endregion
     }
