@@ -21,7 +21,7 @@ namespace AccesoDatos.Operaciones
             }
         }
 
-        public Alumno SeleccionarAlumno(int id)
+        public Alumno? SeleccionarAlumno(int id)
         {
             using (ProyectoContext contexto = new ProyectoContext())
             {

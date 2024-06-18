@@ -16,5 +16,11 @@ namespace WebApi.Controllers
         {
             return alumnoDAO.AlumnosProfesor(usuario);
         }
+
+        [HttpGet("alumno")]
+        public Alumno? GetAlumno(int id)
+        {
+            return alumnoDAO.SeleccionarAlumno(id);
+        }
     }
 }
