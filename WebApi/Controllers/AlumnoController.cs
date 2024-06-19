@@ -22,5 +22,11 @@ namespace WebApi.Controllers
         {
             return alumnoDAO.SeleccionarAlumno(id);
         }
+
+        [HttpPut("alumno")]
+        public bool UpdateAlumno([FromBody] Alumno alumno)
+        {
+            return alumnoDAO.UpdateAlumno(alumno);
+        }
     }
 }

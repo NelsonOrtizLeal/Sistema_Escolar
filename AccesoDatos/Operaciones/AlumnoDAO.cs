@@ -116,6 +116,22 @@ namespace AccesoDatos.Operaciones
             }
         }
 
+        public bool UpdateAlumno(Alumno alumno)
+        {
+            try
+            {
+                using (ProyectoContext contexto = new ProyectoContext())
+                {
+                    contexto.Entry(alumno).State = EntityState.Modified;
+                    contexto.SaveChanges();
+                    return true;
+                }
+            }catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
         public List<AlumnoAsignatura> AlumnosAsignaturas()
         {
             using (ProyectoContext contexto = new ProyectoContext())
