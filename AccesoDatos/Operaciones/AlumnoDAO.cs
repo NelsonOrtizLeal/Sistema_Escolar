@@ -30,6 +30,23 @@ namespace AccesoDatos.Operaciones
             }
         }
 
+        public Alumno? SeleccionarAlumnoDNI(string dni)
+        {
+            try
+            {
+                using (ProyectoContext contexto = new ProyectoContext())
+                {
+                    var alumno = contexto.Alumnos.Where(a => a.Dni.Equals(dni)).FirstOrDefault();
+                    return alumno;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
         public bool Add(Alumno alumno)
         {
             try
@@ -126,7 +143,8 @@ namespace AccesoDatos.Operaciones
                     contexto.SaveChanges();
                     return true;
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return false;
             }
@@ -170,6 +188,55 @@ namespace AccesoDatos.Operaciones
                             };
 
                 return query.ToList();
+            }
+        }
+
+        public bool InsertarMatricula(Alumno alumno, string dni, int id_asignatura)
+        {
+            try
+            {
+                //Revisar que el alumno exista
+                var existe = SeleccionarAlumnoDNI(dni);
+
+                if (existe == null)
+                {
+                    // Creamos el alumno
+                    Add(alumno);
+
+                    // Consultamos el Id del alumno
+                    var insertado = SeleccionarAlumnoDNI(dni);
+
+                    // Registramos la matricula
+                    Matricula m = new Matricula();
+                    m.AsignaturaId = id_asignatura;
+                    m.AlumnoId = insertado.Id;
+
+                    using (ProyectoContext contexto = new ProyectoContext())
+                    {
+                        contexto.Matriculas.Add(m);
+                        contexto.SaveChanges();
+                    }
+                }
+                else
+                {
+                    // Solo asignamos a el alumno
+                    Matricula m = new Matricula();
+                    m.AsignaturaId = id_asignatura;
+                    m.AlumnoId = existe.Id;
+
+                    using (ProyectoContext contexto = new ProyectoContext())
+                    {
+                        contexto.Matriculas.Add(m);
+                        contexto.SaveChanges();
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
             }
         }
     }

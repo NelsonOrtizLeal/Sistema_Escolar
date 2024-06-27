@@ -28,5 +28,11 @@ namespace WebApi.Controllers
         {
             return alumnoDAO.UpdateAlumno(alumno);
         }
+
+        [HttpPost("alumno")]
+        public bool InsertarMatricula([FromBody] Alumno alumno, int id_asignatura)
+        {
+            return alumnoDAO.InsertarMatricula(alumno, alumno.Dni, id_asignatura);
+        }
     }
 }
