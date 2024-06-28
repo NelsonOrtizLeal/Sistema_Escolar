@@ -15,5 +15,11 @@ namespace WebApi.Controllers
         {
             return calificacionDAO.CalificacionesMatricula(id_matricula);
         }
+
+        [HttpPost("calificacion")]
+        public bool Add([FromBody] Calificacion calif)
+        {
+            return calificacionDAO.Add(calif);
+        }
     }
 }

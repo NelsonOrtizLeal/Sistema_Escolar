@@ -22,5 +22,23 @@ namespace AccesoDatos.Operaciones
                 return new List<Calificacion>();
             }
         }
+
+        public bool Add(Calificacion calificacion)
+        {
+            try
+            {
+                using (ProyectoContext contexto = new ProyectoContext())
+                {
+                    contexto.Add(calificacion);
+                    contexto.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
     }
 }
