@@ -29,7 +29,7 @@ namespace AccesoDatos.Operaciones
             {
                 using (ProyectoContext contexto = new ProyectoContext())
                 {
-                    contexto.Add(calificacion);
+                    contexto.Calificacions.Add(calificacion);
                     contexto.SaveChanges();
                     return true;
                 }
@@ -37,6 +37,31 @@ namespace AccesoDatos.Operaciones
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public bool Delete(int id)
+        {
+            try
+            {
+                using (ProyectoContext contexto = new ProyectoContext())
+                {
+                    var encontrado = contexto.Calificacions.Find(id);
+
+                    if( encontrado == null)
+                    {
+                        return false;
+                    }
+
+                    contexto.Calificacions.Remove(encontrado);
+                    contexto.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
                 return false;
             }
         }

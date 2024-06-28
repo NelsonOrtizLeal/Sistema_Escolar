@@ -21,5 +21,11 @@ namespace WebApi.Controllers
         {
             return calificacionDAO.Add(calif);
         }
+
+        [HttpDelete("calificacion")]
+        public bool Delete(int id)
+        {
+            return calificacionDAO.Delete(id);
+        }
     }
 }
