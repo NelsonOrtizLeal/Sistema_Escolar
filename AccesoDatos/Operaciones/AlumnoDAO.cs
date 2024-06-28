@@ -239,5 +239,75 @@ namespace AccesoDatos.Operaciones
                 return false;
             }
         }
+
+        public List<Matricula> MatriculasAlumno(int id_alumno)
+        {
+            try
+            {
+                using (ProyectoContext contexto = new ProyectoContext())
+                {
+                    List<Matricula> matriculas = contexto.Matriculas.Where(m => m.AlumnoId.Equals(id_alumno)).ToList();
+                    return matriculas;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new List<Matricula>();
+            }
+        }
+
+        public bool EliminarAlumno(int id)
+        {
+            try
+            {
+                //Obtener los datos del alumno
+                var alumno = SeleccionarAlumno(id);
+
+                // Si el alumno existe
+                if (alumno != null)
+                {
+                    // Obtener todas las asignaturas mastriculadas al alumno
+                    var matriculas = MatriculasAlumno(id);
+
+                    // Iterar la lista de matriculas para eliminar las calificaciones
+                    foreach (Matricula matricula in matriculas)
+                    {
+                        // Usar el contexto listar las calificaciones y luego eliminar todas las calificaciones de una matricula
+                        using (ProyectoContext contexto = new ProyectoContext())
+                        {
+                            var calificaciones = contexto.Calificacions.Where(c => c.MatriculaId.Equals(matricula.Id));
+
+                            // Eliminar las calificaciones
+                            contexto.Calificacions.RemoveRange(calificaciones);
+                            contexto.SaveChanges();
+                        }
+                    }
+
+                    // De la misma forma eliminar todas las matriculas del alumno
+                    using (ProyectoContext contexto = new ProyectoContext())
+                    {
+                        contexto.Matriculas.RemoveRange(matriculas);
+
+                        // Eliminar el alumno
+                        contexto.Alumnos.Remove(alumno);
+
+                        // Confirmar los cambios en la base de datos
+                        contexto.SaveChanges();
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
     }
 }
