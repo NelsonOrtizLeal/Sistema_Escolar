@@ -14,6 +14,17 @@ namespace WebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Habilitando CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -27,6 +38,8 @@ namespace WebApi
 
             app.UseAuthorization();
 
+            // Usando nuestra regla de CORS
+            app.UseCors();
 
             app.MapControllers();
 
