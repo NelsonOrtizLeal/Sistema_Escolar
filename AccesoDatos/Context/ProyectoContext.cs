@@ -27,8 +27,13 @@ public partial class ProyectoContext : DbContext
     public virtual DbSet<Profesor> Profesors { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=Nelson\\SQLEXPRESS; Database=proyecto; Trust Server Certificate=true;User Id=udemy; Password=123456; MultipleActiveResultSets=true");
+        => optionsBuilder.UseSqlServer("Server=Nelson\\SQLEXPRESS; Database=proyecto; Trust Server Certificate=true;User Id=udemy; Password=1234; MultipleActiveResultSets=true", sqlServerOptionsAction: sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5, // Número máximo de intentos de reintentos
+                maxRetryDelay: TimeSpan.FromSeconds(30), // Retraso máximo entre intentos
+                errorNumbersToAdd: null); // Números de error de SQL para considerar para reintentos
+        });
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
