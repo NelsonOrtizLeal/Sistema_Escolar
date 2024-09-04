@@ -9,5 +9,6 @@
         public int Edad { get; set; }
         public string Email { get; set; }
         public string AsignaturaNombre { get; set; }
+        public int MatriculaId { get; set; }
     }
 }
